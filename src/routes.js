@@ -16,11 +16,11 @@ routes.post("/create", function(req, res) {
         password: req.body.password
     };
 
-    connection.query('INSERT INTO users SET ?', user, function(error) {
+    connection.query('INSERT INTO Users SET ?', user, function(error) {
         if (error) {
             console.log(error.message);
         } else {
-            console.log('data inserted!');    
+            console.log('Data inserted!');    
         }
     });
 });

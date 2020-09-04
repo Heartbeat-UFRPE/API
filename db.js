@@ -15,7 +15,7 @@ const creatingtable = `CREATE TABLE if not exists Users (
     email varchar(50),
     birth date,
     sex enum('F','M'),
-    city varchar(10),
+    city varchar(30),
     password varchar(15),
     primary key(id)
 )`;
