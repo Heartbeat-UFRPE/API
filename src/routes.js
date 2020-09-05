@@ -6,7 +6,7 @@ routes.get('/', (req, res) => {
     return res.send('Servidor funcionando!')
 });
 
-routes.post("/create", function(req, res) {
+routes.post("/user/create", function(req, res) {
     var user = {
         name: req.body.name,
         email: req.body.email,
@@ -24,4 +24,5 @@ routes.post("/create", function(req, res) {
         }
     });
 });
+
 module.exports = routes;

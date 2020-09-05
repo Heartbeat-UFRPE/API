@@ -1,4 +1,5 @@
 const db = require('mysql');
+const popularDataBase = require('./src/popularDB');
 
 const connection = db.createConnection({
     host: '127.0.0.1',
@@ -22,11 +23,9 @@ const creatingtable = `CREATE TABLE if not exists Users (
 
 connection.connect(function(err){
     if(err) return console.log(err);
-    console.log('conected!');
     
     connection.query(creationdb,(err, result)=> {
         if(err) throw err;
-        console.log("Database created");
     })
 
     connection.query(usingdb,(err, result)=> {
@@ -35,8 +34,16 @@ connection.connect(function(err){
 
     connection.query(creatingtable,(err, result)=> {
         if(err) throw err;
-        console.log("Table created");
     })
+
+    connection.query('SELECT * from Users', (err, res) => { 
+        if (res.length == 0){
+            connection.query(popularDataBase,(err, result)=> {
+                if(err) throw err;
+            }
+        )}
+    });
+
 })
 
 module.exports ={connection}
