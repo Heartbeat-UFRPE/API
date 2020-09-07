@@ -6,8 +6,31 @@ routes.get('/', (req, res) => {
     return res.send('Servidor funcionando!')
 });
 
-routes.post("/user/create", function(req, res) {
+routes.get('/user/delete/:id', function(req, res){
+    connection.query('DELETE FROM Users WHERE id='+req.params.id,(err, results) => {
+    if(err) throw err;
+        res.send("Usuário deletado com sucesso.");
+    });
+});
+
+routes.get('/user/:id', (req, res) => {
+    connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id, (err, result) => {
+        if (err) throw err;
+          res.send(result);
+      });
+});
+
+routes.get('/users', (req, res) => {
+    connection.query("SELECT * FROM Users", (err, result) => {
+      if (err) throw err;
+        res.send(result);
+    });
+});
+
+
+routes.post("/user/create", (req, res) => {
     var user = {
+        id: req.body.id,
         name: req.body.name,
         email: req.body.email,
         birth: req.body.birth,
@@ -20,7 +43,8 @@ routes.post("/user/create", function(req, res) {
         if (error) {
             console.log(error.message);
         } else {
-            console.log('Data inserted!');    
+            console.log('Data inserted!'); 
+            res.send(user);  
         }
     });
 });
