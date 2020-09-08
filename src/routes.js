@@ -6,10 +6,10 @@ routes.get('/', (req, res) => {
     return res.send('Servidor funcionando!')
 });
 
-routes.get('/user/delete/:id', function(req, res){
-    connection.query('DELETE FROM Users WHERE id='+req.params.id,(err, results) => {
+routes.get('/user/delete/:id',(req, res) => {
+    connection.query('DELETE FROM Users WHERE id=' + req.params.id,(err, results) => {
     if(err) throw err;
-        res.send("Usuário deletado com sucesso.");
+    res.send("Usuário deletado com sucesso.");
     });
 });
 
@@ -35,15 +35,13 @@ routes.post("/user/create", (req, res) => {
         email: req.body.email,
         birth: req.body.birth,
         sex: req.body.sex,
-        city: req.body.city,
         password: req.body.password
     };
 
-    connection.query('INSERT INTO Users SET ?', user, function(error) {
+    connection.query('INSERT INTO Users SET ?', user,(error) => {
         if (error) {
             console.log(error.message);
-        } else {
-            console.log('Data inserted!'); 
+        } else { 
             res.send(user);  
         }
     });
