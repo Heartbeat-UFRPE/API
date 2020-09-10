@@ -6,10 +6,42 @@ routes.get('/', (req, res) => {
     return res.send('Servidor funcionando!')
 });
 
+routes.post('/user/update/email/:id',(req, res) => {
+    connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id,(err, result) => {
+        if (result!= ""){
+            connection.query('UPDATE Users SET email = ? WHERE id = ?',[req.body.email, req.params.id],(err, results) => {
+                if(err) throw err;
+                res.send("Email atualizado com sucesso.");
+        })}
+        else{
+            res.send("Usuário não existe!");
+        }
+    });
+});
+
+routes.post('/user/update/password/:id',(req, res) => {
+    connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id,(err, result) => {
+        if (result!= ""){
+            connection.query('UPDATE Users SET password = ? WHERE id = ?',[req.body.password, req.params.id],(err, results) => {
+                if(err) throw err;
+                res.send("Senha atualizada com sucesso.");
+        })}
+        else{
+            res.send("Usuário não existe!");
+        }
+    });
+});
+
 routes.get('/user/delete/:id',(req, res) => {
-    connection.query('DELETE FROM Users WHERE id=' + req.params.id,(err, results) => {
-    if(err) throw err;
-    res.send("Usuário deletado com sucesso.");
+    connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id,(err, result) => {
+        if (result!= ""){
+            connection.query('DELETE FROM Users WHERE id=' + req.params.id,(err, results) => {
+                if(err) throw err;
+                res.send("Usuário deletado com sucesso.");
+        })}
+        else{
+            res.send("Usuario não existe!");
+        }
     });
 });
 
