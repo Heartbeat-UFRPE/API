@@ -6,7 +6,7 @@ routes.get('/', (req, res) => {
     return res.send('Servidor funcionando!')
 });
 
-routes.post('/user/update/email/:id',(req, res) => {
+routes.post('/user/update/email/:id',(req, res) => { //Atualização do email do usuário.
     connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id,(err, result) => {
         if (result!= ""){
             connection.query('UPDATE Users SET email = ? WHERE id = ?',[req.body.email, req.params.id],(err, results) => {
@@ -19,7 +19,7 @@ routes.post('/user/update/email/:id',(req, res) => {
     });
 });
 
-routes.post('/user/update/password/:id',(req, res) => {
+routes.post('/user/update/password/:id',(req, res) => { //Atualização de senha do usuário.
     connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id,(err, result) => {
         if (result!= ""){
             connection.query('UPDATE Users SET password = ? WHERE id = ?',[req.body.password, req.params.id],(err, results) => {
@@ -32,7 +32,7 @@ routes.post('/user/update/password/:id',(req, res) => {
     });
 });
 
-routes.get('/user/delete/:id',(req, res) => {
+routes.get('/user/delete/:id',(req, res) => { //Exclusão de usuário.
     connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id,(err, result) => {
         if (result!= ""){
             connection.query('DELETE FROM Users WHERE id=' + req.params.id,(err, results) => {
