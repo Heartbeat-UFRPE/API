@@ -22,9 +22,9 @@ const createTableUser = `CREATE TABLE if not exists Users (
 //Criação da tabela da Anamnese
 const createTableAnamnesia = `CREATE TABLE IF NOT EXISTS Anamnesia ( 
     id int not null auto_increment,
-    userID int,
+    userID int not null,
     height int,
-    weight int,
+    weight float,
     conditions enum('0', '1'),
     familiarHistory enum('0', '1'),
     stress enum ('0','1'),
@@ -32,6 +32,26 @@ const createTableAnamnesia = `CREATE TABLE IF NOT EXISTS Anamnesia (
     qualityFood enum ('0', '1'),
     PRIMARY KEY(id),
     FOREIGN KEY (userID) REFERENCES Users(id)
+)`
+
+const createTablePressure = `CREATE TABLE IF NOT EXISTS Pressure(
+    id int not null auto_increment,
+    userID int not null,
+    weekday enum('0','1','2','3','4','5','6'),
+    value varchar(7) not null,
+
+    PRIMARY KEY(id),
+    FOREIGN KEY(userID) references Users(id)
+)`
+
+const createTableWeight = `CREATE TABLE IF NOT EXISTS Weight(
+    id int not null auto_increment,
+    userID int not null,
+    weekday enum('0','1','2','3','4','5','6'),
+    value float not null,
+
+    PRIMARY KEY(id),
+    FOREIGN KEY(userID) references Users(id)
 )`
 
 connection.connect(function(err){ //Erro de conexão
@@ -53,6 +73,14 @@ connection.connect(function(err){ //Erro de conexão
         if(err) throw err;
     });
 
+    connection.query(createTablePressure, (err, result) => {
+        if(err) throw err;
+    });
+
+    connection.query(createTableWeight, (err, result) => {
+        if(err) throw err;
+    });
+
     connection.query('SELECT * from Users', (err, res) => { //Erro de tamanho zero
         if (res.length == 0){
             connection.query(popularDataBase,(err, result)=> {
@@ -60,7 +88,6 @@ connection.connect(function(err){ //Erro de conexão
             }
         )};
     });
-
 });
 
 module.exports ={connection}

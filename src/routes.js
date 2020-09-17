@@ -6,6 +6,54 @@ routes.get('/', (req, res) => {
     return res.send('Servidor funcionando!')
 });
 
+routes.get('/pressure/:id', (req, res) => {
+    connection.query(`SELECT * FROM Pressure WHERE id = ` + req.params.id, (err, result) => {
+        if (err) throw err;
+          res.send(result);
+      });
+});
+
+routes.post('/pressure/register',(req, res) => {
+    var pressure = {
+        id: req.body.id,
+        userID: req.body.userID,
+        weekday: req.body.weekday,
+        value: req.body.value
+    };
+
+    connection.query('INSERT INTO Pressure SET ?', pressure,(error) => {
+        if (error) {
+            console.log(error.message);
+        } else { 
+            res.send(pressure);  
+        }
+    });
+});
+
+routes.get('/weight/:id', (req, res) => {
+    connection.query(`SELECT * FROM Weight WHERE id = ` + req.params.id, (err, result) => {
+        if (err) throw err;
+          res.send(result);
+      });
+});
+
+routes.post('/weight/register',(req, res) => {
+    var weight = {
+        id: req.body.id,
+        userID: req.body.userID,
+        weekday: req.body.weekday,
+        value: req.body.value
+    };
+
+    connection.query('INSERT INTO Weight SET ?', weight,(error) => {
+        if (error) {
+            console.log(error.message);
+        } else { 
+            res.send(weight);  
+        }
+    });
+});
+
 routes.post('/user/update/email/:id',(req, res) => { //Atualização do email do usuário.
     connection.query(`SELECT * FROM Users WHERE id = ` + req.params.id,(err, result) => {
         if (result!= ""){
