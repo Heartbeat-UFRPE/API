@@ -37,7 +37,6 @@ const createTableAnamnesia = `CREATE TABLE IF NOT EXISTS Anamnesia (
 const createTablePressure = `CREATE TABLE IF NOT EXISTS Pressure(
     id int not null auto_increment,
     userID int not null,
-    weekday enum('0','1','2','3','4','5','6'),
     value varchar(7) not null,
 
     PRIMARY KEY(id),
@@ -47,7 +46,6 @@ const createTablePressure = `CREATE TABLE IF NOT EXISTS Pressure(
 const createTableWeight = `CREATE TABLE IF NOT EXISTS Weight(
     id int not null auto_increment,
     userID int not null,
-    weekday enum('0','1','2','3','4','5','6'),
     value float not null,
 
     PRIMARY KEY(id),
