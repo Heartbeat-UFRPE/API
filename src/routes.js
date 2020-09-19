@@ -6,8 +6,8 @@ routes.get('/', (req, res) => {
     return res.send('Servidor funcionando!')
 });
 
-routes.get('/pressure/:id', (req, res) => {
-    connection.query(`SELECT * FROM Pressure WHERE id = ? `, req.params.id, (err, result) => {
+routes.get('/pressure/:userID', (req, res) => {
+    connection.query(`SELECT * FROM Pressure WHERE userID = ?  ORDER BY id DESC LIMIT 7`, req.params.userID, (err, result) => {
         if (err) throw err;
           res.send(result);
       });
@@ -28,8 +28,8 @@ routes.post('/pressure/register',(req, res) => {
     });
 });
 
-routes.get('/weight/:id', (req, res) => {
-    connection.query(`SELECT * FROM Weight WHERE id = ? `, req.params.id, (err, result) => {
+routes.get('/weight/:userID', (req, res) => {
+    connection.query(`SELECT * FROM Weight WHERE userID = ? ORDER BY id DESC LIMIT 7`, req.params.userID, (err, result) => {
         if (err) throw err;
           res.send(result);
       });

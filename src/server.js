@@ -5,4 +5,6 @@ const app = express();
 app.use(express.json());
 app.use(routes);
 
-app.listen(4444);
+app.listen(4444, '192.168.100.5',()=>{
+    console.log('Runing on ip 192.168.100.5:3333');
+});
