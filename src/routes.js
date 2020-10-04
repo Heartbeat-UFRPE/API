@@ -2,6 +2,8 @@ const express = require('express');
 const { connection } = require('../db');
 const routes = express.Router();
 const gerarToken = require('./middlewares/auth').generateToken
+const jwt = require('jsonwebtoken');
+const authConfig = require('./config/auth.json')
 
 
 routes.get('/', (req, res) => {
@@ -106,7 +108,7 @@ routes.get('/users', (req, res) => {
 });
 
 
-routes.post("/user/create", (req, res) => {
+routes.post("/user/create",(req, res) => {
     var user = {
         name: req.body.name,
         email: req.body.email,
@@ -115,11 +117,15 @@ routes.post("/user/create", (req, res) => {
         password: req.body.password
     };
 
-    connection.query('INSERT INTO Users SET ?', user,(error) => {
+    connection.query('INSERT INTO Users SET ?', user,(error,result) => {
         if (error) {
             console.log(error.message);
         } else { 
-            res.send(user);  
+            const token = jwt.sign({id:result.insertId},authConfig.secret,{
+                expiresIn:'365d'
+            })
+            delete user.password;
+            res.send({token:token,user:user});  
         }
     });
 });
