@@ -23,16 +23,21 @@ function generateToken(req, res, next) {
     connection.query(`SELECT name,email,birth FROM Users WHERE email = ? AND password = ?`, [req.body.email,req.body.password], (err, result) => {
         if (err) throw err;
 
-        if(!result){
+        if(!result.length){
           res.status(400).send({error:"User not found"})
+          return false;
+        }
+        else
+        {
+            const token = jwt.sign({id:result.id},authConfig.secret,{
+              expiresIn:'365d'
+          })
+        
+          req.token = token;
+          req.user  = result;
         }
 
-        const token = jwt.sign({id:result.id},authConfig.secret,{
-            expiresIn:'365d'
-        })
         
-        req.token = token;
-        req.user  = result;
         next();
           
       });
