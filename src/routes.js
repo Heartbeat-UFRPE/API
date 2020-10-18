@@ -33,8 +33,10 @@ routes.post('/pressure/register',(req, res) => {
 });
 
 routes.get('/weight/:userID', (req, res) => {
-    connection.query(`SELECT * FROM Weight WHERE userID = ? ORDER BY id DESC LIMIT 7`, req.params.userID, (err, result) => {
+    
+    connection.query(`SELECT id,value FROM weight WHERE userID = ? ORDER BY id DESC LIMIT 7`, req.params.userID, (err, result) => {
         if (err) throw err;
+          console.table(result)
           res.send(result);
       });
 });

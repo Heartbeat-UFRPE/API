@@ -20,7 +20,7 @@ function autenticarToken(req, res, next) {
 
 function generateToken(req, res, next) {
     
-    connection.query(`SELECT name,email,birth FROM Users WHERE email = ? AND password = ?`, [req.body.email,req.body.password], (err, result) => {
+    connection.query(`SELECT id,name,email,birth FROM Users WHERE email = ? AND password = ?`, [req.body.email,req.body.password], (err, result) => {
         if (err) throw err;
 
         if(!result.length){
