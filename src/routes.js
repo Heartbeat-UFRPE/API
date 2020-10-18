@@ -36,7 +36,6 @@ routes.get('/weight/:userID', (req, res) => {
     
     connection.query(`SELECT id,value FROM weight WHERE userID = ? ORDER BY id DESC LIMIT 7`, req.params.userID, (err, result) => {
         if (err) throw err;
-          console.table(result)
           res.send(result);
       });
 });
@@ -181,5 +180,11 @@ routes.post("/login",gerarToken,(req,res) => {
 });
 
 
+routes.get('/userEmail/:email', (req, res) => {
+    connection.query(`SELECT * FROM Users WHERE email = ? `, req.params.email, (err, result) => {
+        if (err) throw err;
+          res.send(result);
+      });
+});
 
 module.exports = routes;
