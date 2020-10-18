@@ -1,5 +1,7 @@
 const db = require('mysql');
-const popularDataBase = require('./src/popularDB');
+//const popularTableUsers = require('./src/popularDB');
+//const popularTableAnamnesia = require('./src/popularDB');
+const modulo = require('./src/popularDB');
 //Dados da conexão
 const connection = db.createConnection({
     host: '127.0.0.1',
@@ -22,16 +24,36 @@ const createTableUser = `CREATE TABLE if not exists Users (
 //Criação da tabela da Anamnese
 const createTableAnamnesia = `CREATE TABLE IF NOT EXISTS Anamnesia ( 
     id int not null auto_increment,
-    userID int,
+    userID int not null,
     height int,
     weight int,
-    conditions enum('0', '1'),
-    familiarHistory enum('0', '1'),
-    stress enum ('0','1'),
-    qualitySleep enum ('0','1'),
-    qualityFood enum ('0', '1'),
+    lowPressure enum('0', '1'),
+    highPressure enum('0', '1'),
+    heartDiseases enum('0', '1'),
+    arrhythmia enum('0', '1'),
+    physicalActivity enum('0','1'),
+    stress int,
+    HoursSleep int,
     PRIMARY KEY(id),
     FOREIGN KEY (userID) REFERENCES Users(id)
+)`
+
+const createTablePressure = `CREATE TABLE IF NOT EXISTS Pressure(
+    id int not null auto_increment,
+    userID int not null,
+    value varchar(7) not null,
+
+    PRIMARY KEY(id),
+    FOREIGN KEY(userID) references Users(id)
+)`
+
+const createTableWeight = `CREATE TABLE IF NOT EXISTS Weight(
+    id int not null auto_increment,
+    userID int not null,
+    value float not null,
+
+    PRIMARY KEY(id),
+    FOREIGN KEY(userID) references Users(id)
 )`
 
 connection.connect(function(err){ //Erro de conexão
@@ -53,14 +75,29 @@ connection.connect(function(err){ //Erro de conexão
         if(err) throw err;
     });
 
+    connection.query(createTablePressure, (err, result) => {
+        if(err) throw err;
+    });
+
+    connection.query(createTableWeight, (err, result) => {
+        if(err) throw err;
+    });
+
     connection.query('SELECT * from Users', (err, res) => { //Erro de tamanho zero
         if (res.length == 0){
-            connection.query(popularDataBase,(err, result)=> {
+            connection.query(modulo.tableUsers,(err, result)=> {
                 if(err) throw err;
             }
         )};
     });
 
+    connection.query('SELECT * from Anamnesia', (err, res) => { 
+        if (res.length == 0){
+            connection.query(modulo.tableAnamnesia,(err, result)=> {
+                if(err) throw err;
+            }
+        )};
+    });
 });
 
 module.exports ={connection}
