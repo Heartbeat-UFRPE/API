@@ -9,32 +9,39 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-get_ipython().run_line_magic('matplotlib', 'inline')
+#get_ipython().run_line_magic('matplotlib', 'inline')
 
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score, roc_curve, classification_report,                            accuracy_score, confusion_matrix, auc
+from sklearn.metrics import roc_auc_score, roc_curve, classification_report,accuracy_score, confusion_matrix, auc
+
 
 argumentos = sys.argv
-print(argumentos)
 del argumentos[0]
 
+dados = argumentos[0].split("|")
 
-# In[2]:
+
+age          = dados[0]
+anemia       = dados[1]
+diabetes     = dados[2]
+highPressure = dados[3]
+smoking      = dados[4]
+sex          = dados[5]
+
+# para printar algo de volta para o node
+# é necessário ser uma string
+# e passar o parâmetro flush para o print
+# exemplo: print(age,flush=True)
 
 
 df = pd.read_csv("heart_failure_clinical_records_dataset.csv")
 
 
-# In[3]:
-
-
 modelo = smf.glm(formula='DEATH_EVENT ~ age + anaemia + diabetes + high_blood_pressure + smoking + sex', data=df,
                 family = sm.families.Binomial()).fit()
 
-
-# In[4]:
 
 
 model = LogisticRegression(penalty='none', solver='newton-cg')

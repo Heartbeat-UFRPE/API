@@ -27,7 +27,7 @@ const csvInBD = (connection) =>{
         });
     let query ="INSERT INTO Meals(type, name, calories, type2) values ?";
     connection.query(query, [csvData], (error, response) => {
-    console.log(error || response);
+    //console.log(error || response);
         });
     });
   stream.pipe(csvStream);

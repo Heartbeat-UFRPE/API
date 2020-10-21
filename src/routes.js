@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const authConfig = require('./config/auth.json');
 const spawn =  require('child_process').spawn;
 const { once } = require('events')
+var path = require('path');
+var appDir = path.dirname(require.main.filename);   
 
 
 routes.get('/', (req, res) => {
@@ -140,21 +142,19 @@ routes.get("/cardapio/:id", async (req,res)=>{
     FROM Users, Anamnesia WHERE Users.id = ? and Users.id = Anamnesia.UserID`, req.params.id, (err, result) => {
         if (err) throw err;
           res.send(result);
-          
-          const process = spawn('python',['./controller/model.py',JSON.stringify(result)])
-          
-          console.log("chegou aqui!1")
 
+          let infos = `${result[0].age}|${result[0].anaemia}|${result[0].diabetes}|${result[0].highPressure}|${result[0].smoking}|${result[0].sex}|` 
+          
+
+          const process = spawn('python',[`${appDir}/controller/model.py`,JSON.stringify(infos)])
+          
           process.stdout.on('data',(data)=>{
             console.log(data.toString());
-            res.write(data);
             console.log("chegou aqui!3")
-            res.end('end');
-            
-             })
-          //console.log(process)
-          console.log("chegou aqui!2")
+          })
           
+        
+
       });
       
 
@@ -195,7 +195,7 @@ routes.get("/cardapio/:id", async (req,res)=>{
             "jantar":[{"comida": "pao" , "quantidade": "1x" , "kcal" : 65 },{"comida": "broa" , "quantidade": "1x" , "kcal" : 65 }],
         },
     }
-    console.log(process)
+    
     await once(process, 'close')
     
 })
