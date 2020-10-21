@@ -17,7 +17,7 @@ const connection = db.createConnection({
         name varchar(100) not null,
         email varchar(50) not null,
         birth date not null,
-        sex enum('F','M') not null,
+        sex int not null,
         password varchar(15) not null,
         primary key(id)
     )`;
@@ -25,15 +25,17 @@ const connection = db.createConnection({
     const createTableAnamnesia = `CREATE TABLE IF NOT EXISTS Anamnesia ( 
         id int not null auto_increment,
         userID int not null,
-        height int,
-        weight int,
-        lowPressure enum('0', '1'),
-        highPressure enum('0', '1'),
-        heartDiseases enum('0', '1'),
-        arrhythmia enum('0', '1'),
-        physicalActivity enum('0','1'),
-        stress int,
-        HoursSleep int,
+        height int not null,
+        weight int not null,
+        highPressure int not null,
+        heartDiseases int not null,
+        physicalActivity int not null,
+        stress int not null,
+        HoursSleep int not null,
+        anaemia int not null,
+        smoking int not null,
+        diabetes int not null,
+
         PRIMARY KEY(id),
         FOREIGN KEY (userID) REFERENCES Users(id)
     )`

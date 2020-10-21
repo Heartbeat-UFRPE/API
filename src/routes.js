@@ -3,7 +3,9 @@ const { connection } = require('../db');
 const routes = express.Router();
 const gerarToken = require('./middlewares/auth').generateToken
 const jwt = require('jsonwebtoken');
-const authConfig = require('./config/auth.json')
+const authConfig = require('./config/auth.json');
+const spawn =  require('child_process').spawn;
+const { once } = require('events')
 
 
 routes.get('/', (req, res) => {
@@ -131,7 +133,30 @@ routes.post("/user/create",(req, res) => {
     });
 });
 
-routes.get("/cardapio/:id",(req,res)=>{
+routes.get("/cardapio/:id", async (req,res)=>{
+
+    connection.query(`SELECT 
+    YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(Users.birth))) AS age, anaemia, diabetes, highPressure, smoking,sex
+    FROM Users, Anamnesia WHERE Users.id = ? and Users.id = Anamnesia.UserID`, req.params.id, (err, result) => {
+        if (err) throw err;
+          res.send(result);
+          
+          const process = spawn('python',['./controller/model.py',JSON.stringify(result)])
+          
+          console.log("chegou aqui!1")
+
+          process.stdout.on('data',(data)=>{
+            console.log(data.toString());
+            res.write(data);
+            console.log("chegou aqui!3")
+            res.end('end');
+            
+             })
+          //console.log(process)
+          console.log("chegou aqui!2")
+          
+      });
+      
 
     let cardapio = {
         "segunda":{
@@ -170,6 +195,9 @@ routes.get("/cardapio/:id",(req,res)=>{
             "jantar":[{"comida": "pao" , "quantidade": "1x" , "kcal" : 65 },{"comida": "broa" , "quantidade": "1x" , "kcal" : 65 }],
         },
     }
+    console.log(process)
+    await once(process, 'close')
+    
 })
 
 routes.post("/login",gerarToken,(req,res) => {
