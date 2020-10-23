@@ -7,7 +7,8 @@ const authConfig = require('./config/auth.json');
 const spawn =  require('child_process').spawn;
 const { once } = require('events')
 var path = require('path');
-var appDir = path.dirname(require.main.filename);   
+var appDir = path.dirname(require.main.filename);
+var generateCardapio = require('./helpers/generateMenu');   
 
 
 routes.get('/', (req, res) => {
@@ -141,25 +142,49 @@ routes.get("/cardapio/:id", async (req,res)=>{
     YEAR(FROM_DAYS(TO_DAYS(NOW())-TO_DAYS(Users.birth))) AS age, anaemia, diabetes, highPressure, smoking,sex
     FROM Users, Anamnesia WHERE Users.id = ? and Users.id = Anamnesia.UserID`, req.params.id, (err, result) => {
         if (err) throw err;
-          res.send(result);
 
           let infos = `${result[0].age}|${result[0].anaemia}|${result[0].diabetes}|${result[0].highPressure}|${result[0].smoking}|${result[0].sex}|` 
           
+          var cardapio = {}
 
           const process = spawn('python',[`${appDir}/controller/model.py`,JSON.stringify(infos)])
 
           process.setMaxListeners(0)
           
           process.stdout.on('data',(data)=>{
-            console.log(data.toString());
+            const death_prob = parseFloat(data.toString().split(" ")[1]);
             
+            
+            if(death_prob > 0 && death_prob <= 0.2){
+                connection.query("SELECT DISTINCT name,calories,type FROM Meals WHERE type2 = '*' AND calories > 500 ORDER BY type ASC LIMIT 3",
+                function(erro,result){
+                    if(erro) throw erro;
+
+                    cardapio = generateCardapio(result);
+                    res.json(cardapio)
+                });
+            }
+            else if(death_prob > 0.2 && death_prob <= 0.4){
+                connection.query("SELECT DISTINCT(*) FROM Meals WHERE type2 = '*' AND calories > 480  LIMIT 3")
+            }
+            else if(death_prob > 0.4 && death_prob <= 0.6){
+                connection.query("SELECT DISTINCT(*) FROM Meals WHERE type2 = 'RC' AND calories > 364 LIMIT 3")
+            }
+            else if(death_prob > 0.6 && death_prob <= 0.8){
+                connection.query("SELECT DISTINCT(*) FROM Meals WHERE type2 = 'RC' AND calories < 364 LIMIT 3")   
+            }
+            else{
+                connection.query("SELECT DISTINCT(*) FROM Meals WHERE type2 = 'RC' AND calories < 299 LIMIT 3")
+            }
+
+
           })
           
 
       });
       
 
-    let cardapio = {
+    /* let cardapio = {
         "segunda":{
             "cafe":[{"comida": "pao" , "quantidade": "1x" , "kcal" : 65 },{"comida": "broa" , "quantidade": "1x" , "kcal" : 65 }],
             "almoco":[{"comida": "pao" , "quantidade": "1x" , "kcal" : 65 },{"comida": "broa" , "quantidade": "1x" , "kcal" : 65 }],
@@ -195,7 +220,7 @@ routes.get("/cardapio/:id", async (req,res)=>{
             "almoco":[{"comida": "pao" , "quantidade": "1x" , "kcal" : 65 },{"comida": "broa" , "quantidade": "1x" , "kcal" : 65 }],
             "jantar":[{"comida": "pao" , "quantidade": "1x" , "kcal" : 65 },{"comida": "broa" , "quantidade": "1x" , "kcal" : 65 }],
         },
-    }
+    } */
     
     await once(process, 'close')
     
