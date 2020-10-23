@@ -1,5 +1,3 @@
-const { generateToken } = require("../middlewares/auth")
-
 function generateMenu(result){
     
     cardapio = {

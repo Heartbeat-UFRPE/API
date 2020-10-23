@@ -22,14 +22,21 @@ const csvInBD = (connection) =>{
     connection.query(usingdb,(err, result)=> {
         if(err) throw err;
         });
+
     connection.query(createTableMeals, (err, result)=> {
         if(err) throw err;
         });
+
     let query ="INSERT INTO Meals(type, name, calories, type2) values ?";
-    connection.query(query, [csvData], (error, response) => {
-    //console.log(error || response);
-        });
-    });
+
+    connection.query('SELECT * from Meals', (err, res) => { 
+          if (res.length == 0){
+            connection.query(query, [csvData], (error, response) => {
+                  });
+              };
+          });
+      });
+
   stream.pipe(csvStream);
 }
 

@@ -9,7 +9,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-#get_ipython().run_line_magic('matplotlib', 'inline')
 
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
@@ -29,11 +28,6 @@ diabetes     = dados[2]
 highPressure = dados[3]
 smoking      = dados[4]
 sex          = dados[5]
-
-# para printar algo de volta para o node
-# é necessário ser uma string
-# e passar o parâmetro flush para o print
-# exemplo: print(age,flush=True)
 
 import pathlib
 
