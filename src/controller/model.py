@@ -20,7 +20,7 @@ from sklearn.metrics import roc_auc_score, roc_curve, classification_report,accu
 argumentos = sys.argv
 del argumentos[0]
 
-dados = argumentos[0].split("|")
+dados = argumentos[0].replace('"','').split("|")
 
 
 age          = dados[0]
@@ -35,13 +35,13 @@ sex          = dados[5]
 # e passar o parâmetro flush para o print
 # exemplo: print(age,flush=True)
 
+import pathlib
 
-df = pd.read_csv("heart_failure_clinical_records_dataset.csv")
+df = pd.read_csv(str(pathlib.Path().absolute())+"\src\controller\\"+"heart_failure_clinical_records_dataset.csv")
 
 
 modelo = smf.glm(formula='DEATH_EVENT ~ age + anaemia + diabetes + high_blood_pressure + smoking + sex', data=df,
                 family = sm.families.Binomial()).fit()
-
 
 
 model = LogisticRegression(penalty='none', solver='newton-cg')
@@ -94,13 +94,13 @@ pd.crosstab(y, model.predict(X))
 
 
 acuracia = accuracy_score(y, model.predict(X))
-print('O modelo obteve %0.4f de acurácia.' % acuracia)
+#print('O modelo obteve %0.4f de acurácia.' % acuracia)
 
 
 # In[12]:
 
 
-print(classification_report(y, model.predict(X)))
+#print(classification_report(y, model.predict(X)))
 
 
 # In[ ]:
@@ -115,19 +115,11 @@ print(classification_report(y, model.predict(X)))
 def prev_death_event(age, anaemia, diabetes, high_blood_pressure, smoking, sex):
     eu = pd.DataFrame({ 'age': age, 'anaemia': anaemia, 'diabetes': diabetes, 'high_blood_pressure':  high_blood_pressure, 'smoking': smoking, 'sex': sex}, index=[0])
     minha_prob = model.predict_proba(eu)
-    return minha_prob
+    return str(minha_prob).strip("[]")
 
 
-# In[26]:
-# class objeto:
-#     def __init__(self, age, anaemia, diabetes, high_blood_pressure, smoking, sex):
-#         self.age = age
-#         self.anaemia = anaemia
-#         self.diabetes = diabetes
-#         self.high_blood_pressure = high_blood_pressure
-#         self.smoking = smoking
-#         self.sex = sex
-# valores = objeto(40,1, 0, 1, 1, 1)
-print(prev_death_event(18,1,1,1,1,1))
-sys.stdout.flush()
-# %%
+result = prev_death_event(age,anemia,diabetes,highPressure,smoking,sex)
+
+print(result,flush=True)
+
+

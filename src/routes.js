@@ -147,13 +147,14 @@ routes.get("/cardapio/:id", async (req,res)=>{
           
 
           const process = spawn('python',[`${appDir}/controller/model.py`,JSON.stringify(infos)])
+
+          process.setMaxListeners(0)
           
           process.stdout.on('data',(data)=>{
             console.log(data.toString());
-            console.log("chegou aqui!3")
+            
           })
           
-        
 
       });
       
