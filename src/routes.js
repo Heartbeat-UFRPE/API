@@ -159,7 +159,6 @@ routes.get("/cardapio/:id", async (req,res)=>{
                 connection.query("SELECT DISTINCT name,calories,type FROM Meals WHERE type2 = '*' AND calories > 500 ORDER BY type ASC LIMIT 3",
                 function(erro,result){
                     if(erro) throw erro;
-
                     cardapio = generateCardapio(result);
                     res.json(cardapio)
                 });
