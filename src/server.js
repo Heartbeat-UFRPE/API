@@ -2,7 +2,7 @@ const express = require('express');
 const routes = require('./routes')
 const app = express();
 var cors = require('cors')
-const port = process.ENV || 4444;
+//const port = process.ENV || 4444;
 
 
 app.use(express.json());
@@ -10,8 +10,8 @@ app.use(routes);
 app.use(cors())
   
 
-app.listen(port,()=>{
-    console.log(`Runing on ip localhost:${port}`);
+app.listen(4444,()=>{
+    console.log(`Runing on ip localhost:4444`);
 });
     
 // app.listen(port, '192.168.100.5',()=>{
