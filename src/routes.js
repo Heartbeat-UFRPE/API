@@ -189,6 +189,27 @@ routes.post("/login",gerarToken,(req,res) => {
 
 });
 
+routes.post("/anamnese/:UserID", (req,res) => {
+    var anamnese = {
+        UserID: req.body.UserID,
+        height: req.body.height,
+        weight: req.body.weight,
+        highPressure: req.body.highPressure,
+        heartDiseases: req.body.heartDiseases,
+        physicalActivity: req.body.physicalActivity,
+        stress: req.body.stress,
+        hoursSleep: req.body.hoursSleep,
+        anaemia: req.body.anaemia,
+        smoking: req.body.smoking,
+        diabetes: req.body.diabetes
+    };
+
+    connection.query('INSERT INTO Anamnesia SET ?', anamnese,(error,result) => {
+        if (error) throw error;
+          res.send(result);
+    });
+});
+
 routes.get('/userEmail/:email', (req, res) => {
     connection.query(`SELECT * FROM Users WHERE email = ? `, req.params.email, (err, result) => {
         if (err) throw err;
