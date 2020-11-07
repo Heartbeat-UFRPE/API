@@ -13,10 +13,13 @@ const csvInBD = (connection) =>{
   .on("end", function() {
     const usingdb = `use db`;
     const createTableMeals = `CREATE TABLE IF NOT EXISTS Meals(
-        type varchar(5),
-        name varchar(120),
-        calories int,
-        type2 varchar(3)
+        type INT(1),
+        name VARCHAR(255),
+        calories VARCHAR(25),
+        gordura_total DECIMAL(4,2),
+        carboidratos DECIMAL(5,2),
+        proteinas DECIMAL(5,2),
+        grupo INT(1)
     )`
 
     connection.query(usingdb,(err, result)=> {
@@ -27,7 +30,7 @@ const csvInBD = (connection) =>{
         if(err) throw err;
         });
 
-    let query ="INSERT INTO Meals(type, name, calories, type2) values ?";
+    let query ="INSERT INTO Meals(type, name, calories, gordura_total, carboidratos, proteinas, grupo) values ?";
 
     connection.query('SELECT * from Meals', (err, res) => { 
           if (res.length == 0){

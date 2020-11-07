@@ -156,7 +156,7 @@ routes.get("/cardapio/:id", async (req,res)=>{
             
             
             if(death_prob > 0 && death_prob <= 0.2){
-                connection.query("SELECT DISTINCT name,calories,type FROM Meals WHERE type2 = '*' AND calories > 500 ORDER BY type ASC LIMIT 3",
+                connection.query("SELECT DISTINCT * FROM (SELECT * FROM `meals` WHERE gordura_total >= 12.85 GROUP BY type ORDER BY RAND()) as tmp ORDER BY type ASC LIMIT 3",
                 function(erro,result){
                     if(erro) throw erro;
                     cardapio = generateCardapio(result);
@@ -164,16 +164,36 @@ routes.get("/cardapio/:id", async (req,res)=>{
                 });
             }
             else if(death_prob > 0.2 && death_prob <= 0.4){
-                connection.query("SELECT * FROM Meals WHERE type2 = '*' AND calories > 480  LIMIT 3")
+                connection.query("SELECT DISTINCT * FROM (SELECT * FROM `meals` WHERE gordura_total < 12.85 GROUP BY type ORDER BY RAND()) as tmp ORDER BY type ASC LIMIT 3",
+                function(erro,result){
+                    if(erro) throw erro;
+                    cardapio = generateCardapio(result);
+                    res.json(cardapio)
+                });
             }
             else if(death_prob > 0.4 && death_prob <= 0.6){
-                connection.query("SELECT * FROM Meals WHERE type2 = 'RC' AND calories > 364 LIMIT 3")
+                connection.query("SELECT DISTINCT * FROM (SELECT * FROM `meals` WHERE gordura_total <= 9.62 GROUP BY type ORDER BY RAND()) as tmp ORDER BY type ASC LIMIT 3",
+                function(erro,result){
+                    if(erro) throw erro;
+                    cardapio = generateCardapio(result);
+                    res.json(cardapio)
+                });
             }
             else if(death_prob > 0.6 && death_prob <= 0.8){
-                connection.query("SELECT * FROM Meals WHERE type2 = 'RC' AND calories < 364 LIMIT 3")   
+                connection.query("SELECT DISTINCT * FROM (SELECT * FROM `meals` WHERE gordura_total <= 5.65 GROUP BY type ORDER BY RAND()) as tmp ORDER BY type ASC LIMIT 3",
+                function(erro,result){
+                    if(erro) throw erro;
+                    cardapio = generateCardapio(result);
+                    res.json(cardapio)
+                });   
             }
             else{
-                connection.query("SELECT * FROM Meals WHERE type2 = 'RC' AND calories < 299 LIMIT 3")
+                connection.query("SELECT DISTINCT * FROM (SELECT * FROM `meals` WHERE gordura_total <= 3.73 GROUP BY type ORDER BY RAND()) as tmp ORDER BY type ASC LIMIT 3",
+                function(erro,result){
+                    if(erro) throw erro;
+                    cardapio = generateCardapio(result);
+                    res.json(cardapio)
+                });
             }
           });
       });
